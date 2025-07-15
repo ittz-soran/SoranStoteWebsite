@@ -57,6 +57,39 @@
         }
       }
 
+      /* Gallery styles */
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+      
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+      
+      .gallery-item img {
+        transition: transform 0.3s ease;
+      }
+      
+      .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, rgba(93, 92, 222, 0.8), rgba(79, 70, 229, 0.8));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+      }
+      
+      .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+      }
+
       /* RTL Support */
       [dir="rtl"] .rtl-flip {
         transform: scaleX(-1);
@@ -106,7 +139,7 @@
         border-radius: 0.5rem;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         z-index: 100;
-        min-width: 120px;
+        min-width: 140px;
       }
 
       .dark .language-dropdown {
@@ -140,19 +173,90 @@
         font-weight: 700; /* Bold for better readability */
       }
 
-      /* Existing styles remain the same */
-      .gradient-bg {
-        background: linear-gradient(135deg, #5d5cde 0%, #4f46e5 100%);
+      /* Service card animations */
+      .service-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
       }
-      /* ... (all other existing styles remain unchanged) ... */
+      
+      .service-icon {
+        background: linear-gradient(135deg, #5d5cde, #4f46e5);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 16px;
+      }
+
+      /* Product modal styles */
+      .product-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      
+      .product-modal-content {
+        background: white;
+        border-radius: 1rem;
+        max-width: 6xl;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      .dark .product-modal-content {
+        background: #1f2937;
+      }
+      
+      .product-card {
+        background: white;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+      
+      .dark .product-card {
+        background: #374151;
+      }
+      
+      .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+      }
+      
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      
+      .price-tag {
+        background: linear-gradient(135deg, #5d5cde, #4f46e5);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
     </style>
   </head>
   <body
-    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
     id="body"
   >
     <!-- Navigation -->
-    <nav class="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50">
+    <nav class="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-colors duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
@@ -188,6 +292,12 @@
                 >Services</a
               >
               <a
+                href="#gallery"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.gallery"
+                >Gallery</a
+              >
+              <a
                 href="#products"
                 class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
                 data-translate="nav.products"
@@ -202,14 +312,31 @@
             </div>
           </div>
 
-          <!-- Language Switcher & Mobile Menu -->
+          <!-- Theme Toggle, Language Switcher & Mobile Menu -->
           <div class="flex items-center space-x-4">
+            <!-- Dark/Light Mode Toggle -->
+            <button
+              id="theme-toggle"
+              class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              title="Toggle theme"
+            >
+              <svg id="theme-icon-light" class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+              </svg>
+              <svg id="theme-icon-dark" class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+              </svg>
+            </button>
+
             <!-- Language Switcher -->
             <div class="language-switcher">
               <button
                 id="language-btn"
-                class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                </svg>
                 <span id="current-lang">EN</span>
                 <svg
                   class="w-4 h-4"
@@ -227,22 +354,25 @@
               </button>
               <div id="language-dropdown" class="language-dropdown hidden">
                 <button
-                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
                   data-lang="en"
                 >
-                  English
+                  <span class="text-lg">🇺🇸</span>
+                  <span>English</span>
                 </button>
                 <button
-                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
                   data-lang="ar"
                 >
-                  العربية
+                  <span class="text-lg">🇸🇦</span>
+                  <span>العربية</span>
                 </button>
                 <button
-                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
                   data-lang="ku"
                 >
-                  کوردی
+                  <span class="text-lg">🇮🇶</span>
+                  <span>کوردی</span>
                 </button>
               </div>
             </div>
@@ -251,7 +381,7 @@
             <div class="md:hidden">
               <button
                 id="mobile-menu-btn"
-                class="text-gray-700 dark:text-gray-300 hover:text-primary"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <svg
                   class="h-6 w-6"
@@ -296,6 +426,12 @@
             >Services</a
           >
           <a
+            href="#gallery"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.gallery"
+            >Gallery</a
+          >
+          <a
             href="#products"
             class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
             data-translate="nav.products"
@@ -312,23 +448,6 @@
     </nav>
 
     <!-- Hero Section -->
-    <!-- <section id="home" class="gradient-bg py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 fade-in" data-translate="hero.title">
-                    Welcome to Soran Store
-                </h1>
-                <p class="text-xl md:text-2xl text-white mb-8 fade-in" style="animation-delay: 0.2s;" data-translate="hero.subtitle">
-                    Quality products and exceptional service for all your needs
-                </p>
-                <div class="fade-in" style="animation-delay: 0.4s;">
-                    <a href="#contact" class="bg-white text-primary px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 inline-block" data-translate="hero.cta">
-                        Get Started
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section> -->
     <section id="home" class="relative py-20">
       <!-- Background Image -->
       <div class="absolute inset-0">
@@ -336,7 +455,6 @@
           src="A1.jpg"
           alt="Soran Store Background"
           class="w-full h-full object-cover"
-          
           sizes="100vw"
         />
       </div>
@@ -374,7 +492,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 bg-gray-50 dark:bg-gray-800">
+    <section id="about" class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2
@@ -416,7 +534,7 @@
               best.
             </p>
           </div>
-          <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg">
+          <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg transition-colors duration-300">
             <h4
               class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
               data-translate="about.whyTitle"
@@ -502,89 +620,272 @@
       </div>
     </section>
 
-    <!-- Daily Works/Services Section -->
-    <section id="services" class="py-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Enhanced Services Section -->
+    <section id="services" class="py-20 relative overflow-hidden">
+      <!-- Background gradient -->
+      <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent"></div>
+      
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Our Daily Work &amp; Services
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-translate="services.title">
+            Our Professional Services
           </h2>
-          <p class="text-xl text-gray-600 dark:text-gray-300">
-            What we do every day to serve you better
+          <p class="text-xl text-gray-600 dark:text-gray-300" data-translate="services.subtitle">
+            Comprehensive solutions for all your technology needs
           </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
-          <div
-            class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg card-hover"
-          >
-            <div class="text-primary text-4xl mb-4">🔧</div>
-            <h3
-              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
-            >
-              Daily Maintenance
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Service 1 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              💻
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.computerRepair">
+              Computer Repair & Maintenance
             </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              We perform regular maintenance and quality checks to ensure all
-              our products and services meet the highest standards.
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.computerRepairDesc">
+              Expert computer repair services including hardware diagnostics, software troubleshooting, and system optimization.
             </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Hardware diagnostics</li>
+              <li>• Software installation</li>
+              <li>• Virus removal</li>
+              <li>• System optimization</li>
+            </ul>
           </div>
 
-          <div
-            class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg card-hover"
-          >
-            <div class="text-primary text-4xl mb-4">📦</div>
-            <h3
-              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
-            >
-              Order Processing
+          <!-- Service 2 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              🎮
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.gaming">
+              Gaming Solutions
             </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              Our team processes orders efficiently, ensuring quick turnaround
-              times and accurate fulfillment for all customers.
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.gamingDesc">
+              Custom gaming PC builds, console repairs, and gaming accessories to enhance your gaming experience.
             </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Custom PC builds</li>
+              <li>• Console repair</li>
+              <li>• Gaming accessories</li>
+              <li>• Performance optimization</li>
+            </ul>
           </div>
 
-          <div
-            class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg card-hover"
-          >
-            <div class="text-primary text-4xl mb-4">🎯</div>
-            <h3
-              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
-            >
-              Customer Support
+          <!-- Service 3 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              🌐
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.network">
+              Network Solutions
             </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              Daily customer support and consultation to help you find the
-              perfect solutions for your needs.
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.networkDesc">
+              Professional network setup, troubleshooting, and security solutions for homes and businesses.
             </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Network setup</li>
+              <li>• WiFi configuration</li>
+              <li>• Security implementation</li>
+              <li>• Performance monitoring</li>
+            </ul>
+          </div>
+
+          <!-- Service 4 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              📱
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.mobile">
+              Mobile Device Services
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.mobileDesc">
+              Mobile phone repairs, screen replacements, and a wide range of mobile accessories.
+            </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Screen replacement</li>
+              <li>• Battery replacement</li>
+              <li>• Water damage repair</li>
+              <li>• Accessories & cases</li>
+            </ul>
+          </div>
+
+          <!-- Service 5 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              🛠️
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.technical">
+              Technical Support
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.technicalDesc">
+              Comprehensive technical support and consultation services for all your technology needs.
+            </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Remote support</li>
+              <li>• On-site visits</li>
+              <li>• Consultation</li>
+              <li>• Training services</li>
+            </ul>
+          </div>
+
+          <!-- Service 6 -->
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg card-hover transition-colors duration-300">
+            <div class="service-icon">
+              📦
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4" data-translate="services.installation">
+              Installation Services
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4" data-translate="services.installationDesc">
+              Professional installation services for computers, networks, and various electronic devices.
+            </p>
+            <ul class="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+              <li>• Software installation</li>
+              <li>• Hardware setup</li>
+              <li>• Network installation</li>
+              <li>• System configuration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-translate="gallery.title">
+            Our Work Gallery
+          </h2>
+          <p class="text-xl text-gray-600 dark:text-gray-300" data-translate="gallery.subtitle">
+            Showcasing our expertise and quality work
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-item aspect-square">
+            <img 
+              src="computer.jpg" 
+              alt="Computer Service" 
+              class="w-full h-full object-cover"
+              loading="lazy">
+            <div class="gallery-overlay">
+              <span data-translate="gallery.computerWork">Computer Service</span>
+            </div>
+          </div>
+
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item aspect-square">
+            <img 
+              src="gaming1.jpg" 
+              alt="Gaming Setup" 
+              class="w-full h-full object-cover"
+              loading="lazy">
+            <div class="gallery-overlay">
+              <span data-translate="gallery.gamingSetup">Gaming Setup</span>
+            </div>
+          </div>
+
+          <!-- Gallery Item 3 -->
+          <div class="gallery-item aspect-square">
+            <img 
+              src="network.jpg" 
+              alt="Network Installation" 
+              class="w-full h-full object-cover"
+              loading="lazy">
+            <div class="gallery-overlay">
+              <span data-translate="gallery.networkInstall">Network Installation</span>
+            </div>
+          </div>
+
+          <!-- Gallery Item 4 -->
+          <div class="gallery-item aspect-square">
+            <img 
+              src="mobile.jpg" 
+              alt="Mobile Repair" 
+              class="w-full h-full object-cover"
+              loading="lazy">
+            <div class="gallery-overlay">
+              <span data-translate="gallery.mobileRepair">Mobile Repair</span>
+            </div>
+          </div>
+
+          <!-- Generated Gallery Items -->
+          <div class="gallery-item aspect-square">
+            <div class="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+              <div class="text-center text-white">
+                <div class="text-3xl mb-2">🖥️</div>
+                <div class="text-sm font-semibold">PC Building</div>
+              </div>
+            </div>
+            <div class="gallery-overlay">
+              <span data-translate="gallery.pcBuilding">PC Building</span>
+            </div>
+          </div>
+
+          <div class="gallery-item aspect-square">
+            <div class="w-full h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+              <div class="text-center text-white">
+                <div class="text-3xl mb-2">🔧</div>
+                <div class="text-sm font-semibold">Repair Work</div>
+              </div>
+            </div>
+            <div class="gallery-overlay">
+              <span data-translate="gallery.repairWork">Repair Work</span>
+            </div>
+          </div>
+
+          <div class="gallery-item aspect-square">
+            <div class="w-full h-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+              <div class="text-center text-white">
+                <div class="text-3xl mb-2">📡</div>
+                <div class="text-sm font-semibold">WiFi Setup</div>
+              </div>
+            </div>
+            <div class="gallery-overlay">
+              <span data-translate="gallery.wifiSetup">WiFi Setup</span>
+            </div>
+          </div>
+
+          <div class="gallery-item aspect-square">
+            <div class="w-full h-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+              <div class="text-center text-white">
+                <div class="text-3xl mb-2">🛡️</div>
+                <div class="text-sm font-semibold">Security</div>
+              </div>
+            </div>
+            <div class="gallery-overlay">
+              <span data-translate="gallery.security">Security Setup</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Products Section -->
-    <section id="products" class="py-20 bg-gray-50 dark:bg-gray-800">
+    <section id="products" class="py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-translate="products.title">
             Product Categories
           </h2>
-          <p class="text-xl text-gray-600 dark:text-gray-300">
+          <p class="text-xl text-gray-600 dark:text-gray-300" data-translate="products.subtitle">
             Explore our wide range of products
           </p>
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div
-            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover"
+            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover transition-colors duration-300 cursor-pointer product-category"
+            data-category="computer"
           >
             <div
               class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
             >
-              <!-- <span class="text-white text-6xl">
-                
-              </span> -->
               <img 
                     src="computer.jpg" 
                     alt="Computer Service" 
@@ -593,95 +894,87 @@
             </div>
             <div class="p-6">
               <h3
-                class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+                class="text-xl font-semibold text-gray-900 dark:text-white mb-2" data-translate="products.computer"
               >
                 Computer
               </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                Description of your first product category and what it includes.
+              <p class="text-gray-600 dark:text-gray-300" data-translate="products.computerDesc">
+                High-quality computers, laptops, and accessories for all your computing needs.
               </p>
             </div>
           </div>
 
           <div
-            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover"
+            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover transition-colors duration-300 cursor-pointer product-category"
+            data-category="gaming"
           >
             <div
               class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center"
             >
-               <!-- <span class="text-white text-6xl">
-                
-              </span> -->
               <img 
                     src="gaming1.jpg" 
-                    alt="Computer Service" 
+                    alt="Gaming Products" 
                     class="w-full h-full object-cover"
                     sizes="100vw">
             </div>
             <div class="p-6">
               <h3
-                class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+                class="text-xl font-semibold text-gray-900 dark:text-white mb-2" data-translate="products.gaming"
               >
                 Gaming
               </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                Description of your second product category and what it
-                includes.
+              <p class="text-gray-600 dark:text-gray-300" data-translate="products.gamingDesc">
+                Gaming PCs, consoles, accessories, and peripherals for the ultimate gaming experience.
               </p>
             </div>
           </div>
 
           <div
-            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover"
+            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover transition-colors duration-300 cursor-pointer product-category"
+            data-category="network"
           >
             <div
               class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
             >
-               <!-- <span class="text-white text-6xl">
-                
-              </span> -->
               <img 
                     src="network.jpg" 
-                    alt="Computer Service" 
+                    alt="Network Equipment" 
                     class="w-full h-full object-cover"
                     sizes="100vw">
             </div>
             <div class="p-6">
               <h3
-                class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+                class="text-xl font-semibold text-gray-900 dark:text-white mb-2" data-translate="products.network"
               >
                 Network
               </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                Description of your third product category and what it includes.
+              <p class="text-gray-600 dark:text-gray-300" data-translate="products.networkDesc">
+                Routers, switches, cables, and networking equipment for reliable connectivity.
               </p>
             </div>
           </div>
 
           <div
-            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover"
+            class="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden card-hover transition-colors duration-300 cursor-pointer product-category"
+            data-category="mobile"
           >
             <div
               class="h-48 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center"
             >
-               <!-- <span class="text-white text-6xl">
-                
-              </span> -->
               <img 
                     src="mobile.jpg" 
-                    alt="Computer Service" 
+                    alt="Mobile Accessories" 
                     class="w-full h-full object-cover"
                     sizes="100vw">
             </div>
             <div class="p-6">
               <h3
-                class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+                class="text-xl font-semibold text-gray-900 dark:text-white mb-2" data-translate="products.mobile"
               >
-                Mobile Accessuaris
+                Mobile Accessories
               </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                Description of your fourth product category and what it
-                includes.
+              <p class="text-gray-600 dark:text-gray-300" data-translate="products.mobileDesc">
+                Phone cases, chargers, screen protectors, and other mobile accessories.
               </p>
             </div>
           </div>
@@ -690,13 +983,13 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20">
+    <section id="contact" class="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-translate="contact.title">
             Contact Us
           </h2>
-          <p class="text-xl text-gray-600 dark:text-gray-300">
+          <p class="text-xl text-gray-600 dark:text-gray-300" data-translate="contact.subtitle">
             Get in touch with us today
           </p>
         </div>
@@ -704,7 +997,7 @@
         <div class="grid md:grid-cols-2 gap-12">
           <div>
             <h3
-              class="text-2xl font-semibold text-gray-900 dark:text-white mb-6"
+              class="text-2xl font-semibold text-gray-900 dark:text-white mb-6" data-translate="contact.getInTouch"
             >
               Get In Touch
             </h3>
@@ -732,13 +1025,11 @@
                 <span class="text-gray-600 dark:text-gray-300">
                     <a 
                   href="https://maps.app.goo.gl/Nbeh28kSoNwowaLr6" 
-                  target="_blank">
+                  target="_blank" data-translate="contact.address">
                     Shaqamy Gshty, Halabja Shahid, Iraq
                     </a>
                 </span>
               </div>
-              
-
 
               <div class="flex items-center">
                 <svg
@@ -754,12 +1045,10 @@
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   ></path>
                 </svg>
-                <span class="text-gray-600 dark:text-gray-300"
-                  >
-                  <!-- <a href="https://wa.me/9647501252131" target="_blank">+964 750 125 2131</a> -->
+                <span class="text-gray-600 dark:text-gray-300">
                   <div class="relative inline-block text-left group">
                     <button
-                        class="flex items-center px-4 py-2  text-white rounded-lg transition"
+                        class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg transition"
                     >
                         +964 750 125 2131
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -768,7 +1057,6 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown menu -->
                     <div
                         class="absolute z-10 mt-2 w-48 bg-white rounded-lg shadow-lg border dark:bg-gray-800 dark:border-gray-700 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity"
                     >
@@ -776,20 +1064,20 @@
                         href="tel:+9647501252131"
                         class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
-                        📞 Call: +964 750 125 2131
+                        📞 <span data-translate="contact.call">Call:</span> +964 750 125 2131
                         </a>
                         <a
                         href="https://wa.me/9647501252131"
                         target="_blank"
                         class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
-                        💬 WhatsApp Chat
+                        💬 <span data-translate="contact.whatsapp">WhatsApp Chat</span>
                         </a>
                     </div>
                     </div>
-                </span
-                >
+                </span>
               </div>
+              
               <div class="flex items-center">
                 <svg
                   class="w-6 h-6 text-primary mr-4"
@@ -806,20 +1094,19 @@
                 </svg>
                 <span class="text-gray-600 dark:text-gray-300"
                   ><a href="mailto:soranstore@outlook.com">soranstore@outlook.com</a>
-                </span
-                >
+                </span>
               </div>
             </div>
 
             <div class="mt-8">
               <h4
-                class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                class="text-lg font-semibold text-gray-900 dark:text-white mb-4" data-translate="contact.hours"
               >
                 Business Hours
               </h4>
               <div class="space-y-2 text-gray-600 dark:text-gray-300">
-                <div>Saturday - Thursday: 8:00 AM - 11:00 PM</div>
-                <div>Friday: 9:00 AM - 11:00 AM / 2:00 PM - 11:00 PM</div>
+                <div data-translate="contact.weekdays">Saturday - Thursday: 8:00 AM - 11:00 PM</div>
+                <div data-translate="contact.friday">Friday: 9:00 AM - 11:00 AM / 2:00 PM - 11:00 PM</div>
               </div>
             </div>
           </div>
@@ -828,40 +1115,40 @@
             <form class="space-y-6">
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" data-translate="contact.name"
                   >Name</label
                 >
                 <input
                   type="text"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-colors duration-300"
                   placeholder="Your Name"
                 />
               </div>
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" data-translate="contact.emailLabel"
                   >Email</label
                 >
                 <input
                   type="email"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-colors duration-300"
                   placeholder="your@email.com"
                 />
               </div>
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" data-translate="contact.message"
                   >Message</label
                 >
                 <textarea
                   rows="4"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base transition-colors duration-300"
                   placeholder="Your message here..."
                 ></textarea>
               </div>
               <button
                 type="submit"
-                class="w-full bg-primary text-white py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-200 font-semibold"
+                class="w-full bg-primary text-white py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-200 font-semibold" data-translate="contact.send"
               >
                 Send Message
               </button>
@@ -877,18 +1164,19 @@
         <div class="grid md:grid-cols-4 gap-8">
           <div>
             <h3 class="text-2xl font-bold text-primary mb-4">Soran Store</h3>
-            <p class="text-gray-400">
+            <p class="text-gray-400" data-translate="footer.tagline">
               Your trusted partner for quality products and exceptional service.
             </p>
           </div>
 
           <div>
-            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <h4 class="text-lg font-semibold mb-4" data-translate="footer.quickLinks">Quick Links</h4>
             <ul class="space-y-2 text-gray-400">
               <li>
                 <a
                   href="#home"
                   class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.home"
                   >Home</a
                 >
               </li>
@@ -896,6 +1184,7 @@
                 <a
                   href="#about"
                   class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.about"
                   >About</a
                 >
               </li>
@@ -903,55 +1192,61 @@
                 <a
                   href="#services"
                   class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.services"
                   >Services</a
                 >
               </li>
               <li>
                 <a
-                  href="#products"
+                  href="#gallery"
                   class="hover:text-white transition-colors duration-200"
-                  >Products</a
+                  data-translate="nav.gallery"
+                  >Gallery</a
                 >
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-lg font-semibold mb-4">Products</h4>
+            <h4 class="text-lg font-semibold mb-4" data-translate="footer.products">Products</h4>
             <ul class="space-y-2 text-gray-400">
               <li>
                 <a
                   href="#"
                   class="hover:text-white transition-colors duration-200"
-                  >Category 1</a
+                  data-translate="products.computer"
+                  >Computer</a
                 >
               </li>
               <li>
                 <a
                   href="#"
                   class="hover:text-white transition-colors duration-200"
-                  >Category 2</a
+                  data-translate="products.gaming"
+                  >Gaming</a
                 >
               </li>
               <li>
                 <a
                   href="#"
                   class="hover:text-white transition-colors duration-200"
-                  >Category 3</a
+                  data-translate="products.network"
+                  >Network</a
                 >
               </li>
               <li>
                 <a
                   href="#"
                   class="hover:text-white transition-colors duration-200"
-                  >Category 4</a
+                  data-translate="products.mobile"
+                  >Mobile Accessories</a
                 >
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+            <h4 class="text-lg font-semibold mb-4" data-translate="footer.follow">Follow Us</h4>
             <div class="flex space-x-4">
               <a
                 href="#"
@@ -990,7 +1285,7 @@
         <div
           class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"
         >
-          <p>© 2025 Soran Store Name. All rights reserved.</p>
+          <p data-translate="footer.copyright">© 2025 Soran Store Name. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -1004,6 +1299,7 @@
             home: "Home",
             about: "About",
             services: "Services",
+            gallery: "Gallery",
             products: "Products",
             contact: "Contact",
           },
@@ -1028,45 +1324,57 @@
             delivery: "Fast Delivery",
           },
           services: {
-            title: "Our Daily Work & Services",
-            subtitle: "What we do every day to serve you better",
-            maintenance: "Daily Maintenance",
-            maintenanceDesc:
-              "We perform regular maintenance and quality checks to ensure all our products and services meet the highest standards.",
-            processing: "Order Processing",
-            processingDesc:
-              "Our team processes orders efficiently, ensuring quick turnaround times and accurate fulfillment for all customers.",
-            support: "Customer Support",
-            supportDesc:
-              "Daily customer support and consultation to help you find the perfect solutions for your needs.",
+            title: "Our Professional Services",
+            subtitle: "Comprehensive solutions for all your technology needs",
+            computerRepair: "Computer Repair & Maintenance",
+            computerRepairDesc: "Expert computer repair services including hardware diagnostics, software troubleshooting, and system optimization.",
+            gaming: "Gaming Solutions",
+            gamingDesc: "Custom gaming PC builds, console repairs, and gaming accessories to enhance your gaming experience.",
+            network: "Network Solutions",
+            networkDesc: "Professional network setup, troubleshooting, and security solutions for homes and businesses.",
+            mobile: "Mobile Device Services",
+            mobileDesc: "Mobile phone repairs, screen replacements, and a wide range of mobile accessories.",
+            technical: "Technical Support",
+            technicalDesc: "Comprehensive technical support and consultation services for all your technology needs.",
+            installation: "Installation Services",
+            installationDesc: "Professional installation services for computers, networks, and various electronic devices.",
+          },
+          gallery: {
+            title: "Our Work Gallery",
+            subtitle: "Showcasing our expertise and quality work",
+            computerWork: "Computer Service",
+            gamingSetup: "Gaming Setup",
+            networkInstall: "Network Installation",
+            mobileRepair: "Mobile Repair",
+            pcBuilding: "PC Building",
+            repairWork: "Repair Work",
+            wifiSetup: "WiFi Setup",
+            security: "Security Setup",
           },
           products: {
             title: "Product Categories",
             subtitle: "Explore our wide range of products",
-            category1: "Category 1",
-            category1Desc:
-              "Description of your first product category and what it includes.",
-            category2: "Category 2",
-            category2Desc:
-              "Description of your second product category and what it includes.",
-            category3: "Category 3",
-            category3Desc:
-              "Description of your third product category and what it includes.",
-            category4: "Category 4",
-            category4Desc:
-              "Description of your fourth product category and what it includes.",
+            computer: "Computer",
+            computerDesc: "High-quality computers, laptops, and accessories for all your computing needs.",
+            gaming: "Gaming",
+            gamingDesc: "Gaming PCs, consoles, accessories, and peripherals for the ultimate gaming experience.",
+            network: "Network",
+            networkDesc: "Routers, switches, cables, and networking equipment for reliable connectivity.",
+            mobile: "Mobile Accessories",
+            mobileDesc: "Phone cases, chargers, screen protectors, and other mobile accessories.",
           },
           contact: {
             title: "Contact Us",
             subtitle: "Get in touch with us today",
             getInTouch: "Get In Touch",
-            address: "123 Business Street, City, State 12345",
-            phone: "+1 (555) 123-4567",
-            email: "info@yourbusiness.com",
+            address: "Shaqamy Gshty, Halabja Shahid, Iraq",
+            phone: "+964 750 125 2131",
+            email: "soranstore@outlook.com",
             hours: "Business Hours",
-            mondayFriday: "Monday - Friday: 9:00 AM - 6:00 PM",
-            saturday: "Saturday: 10:00 AM - 4:00 PM",
-            sunday: "Sunday: Closed",
+            weekdays: "Saturday - Thursday: 8:00 AM - 11:00 PM",
+            friday: "Friday: 9:00 AM - 11:00 AM / 2:00 PM - 11:00 PM",
+            call: "Call",
+            whatsapp: "WhatsApp Chat",
             name: "Name",
             nameplaceholder: "Your Name",
             emailLabel: "Email",
@@ -1083,7 +1391,7 @@
             quickLinks: "Quick Links",
             products: "Products",
             follow: "Follow Us",
-            copyright: "© 2024 Soran Store Name. All rights reserved.",
+            copyright: "© 2025 Soran Store Name. All rights reserved.",
           },
         },
         ar: {
@@ -1092,11 +1400,12 @@
             home: "الرئيسية",
             about: "من نحن",
             services: "الخدمات",
+            gallery: "المعرض",
             products: "المنتجات",
             contact: "تواصل معنا",
           },
           hero: {
-            title: "مرحباً بكم في عملكم التجاري",
+            title: "مرحباً بكم في سـۆران سـتور",
             subtitle: "منتجات عالية الجودة وخدمة استثنائية لجميع احتياجاتكم",
             cta: "ابدأ الآن",
           },
@@ -1115,41 +1424,57 @@
             delivery: "توصيل سريع",
           },
           services: {
-            title: "عملنا اليومي والخدمات",
-            subtitle: "ما نقوم به كل يوم لخدمتكم بشكل أفضل",
-            maintenance: "الصيانة اليومية",
-            maintenanceDesc:
-              "نقوم بالصيانة المنتظمة وفحص الجودة للتأكد من أن جميع منتجاتنا وخدماتنا تلبي أعلى المعايير.",
-            processing: "معالجة الطلبات",
-            processingDesc:
-              "فريقنا يعالج الطلبات بكفاءة، مما يضمن أوقات تسليم سريعة وتنفيذ دقيق لجميع العملاء.",
-            support: "دعم العملاء",
-            supportDesc:
-              "دعم العملاء اليومي والاستشارة لمساعدتكم في العثور على الحلول المثالية لاحتياجاتكم.",
+            title: "خدماتنا المهنية",
+            subtitle: "حلول شاملة لجميع احتياجاتكم التقنية",
+            computerRepair: "إصلاح وصيانة الحاسوب",
+            computerRepairDesc: "خدمات إصلاح خبيرة تشمل تشخيص الأجهزة، حل مشاكل البرمجيات، وتحسين النظام.",
+            gaming: "حلول الألعاب",
+            gamingDesc: "بناء أجهزة ألعاب مخصصة، إصلاح وحدات التحكم، وإكسسوارات الألعاب لتعزيز تجربتكم.",
+            network: "حلول الشبكات",
+            networkDesc: "إعداد شبكات مهني، حل المشاكل، وحلول الأمان للمنازل والشركات.",
+            mobile: "خدمات الأجهزة المحمولة",
+            mobileDesc: "إصلاح الهواتف المحمولة، استبدال الشاشات، ومجموعة واسعة من إكسسوارات المحمول.",
+            technical: "الدعم التقني",
+            technicalDesc: "دعم تقني شامل وخدمات استشارية لجميع احتياجاتكم التقنية.",
+            installation: "خدمات التركيب",
+            installationDesc: "خدمات تركيب مهنية للحاسوب، الشبكات، ومختلف الأجهزة الإلكترونية.",
+          },
+          gallery: {
+            title: "معرض أعمالنا",
+            subtitle: "عرض خبرتنا وجودة عملنا",
+            computerWork: "خدمة الحاسوب",
+            gamingSetup: "إعداد الألعاب",
+            networkInstall: "تركيب الشبكة",
+            mobileRepair: "إصلاح المحمول",
+            pcBuilding: "بناء الحاسوب",
+            repairWork: "أعمال الإصلاح",
+            wifiSetup: "إعداد الواي فاي",
+            security: "إعداد الأمان",
           },
           products: {
             title: "فئات المنتجات",
             subtitle: "استكشف مجموعتنا الواسعة من المنتجات",
-            category1: "الفئة الأولى",
-            category1Desc: "وصف فئة المنتج الأولى وما تتضمنه.",
-            category2: "الفئة الثانية",
-            category2Desc: "وصف فئة المنتج الثانية وما تتضمنه.",
-            category3: "الفئة الثالثة",
-            category3Desc: "وصف فئة المنتج الثالثة وما تتضمنه.",
-            category4: "الفئة الرابعة",
-            category4Desc: "وصف فئة المنتج الرابعة وما تتضمنه.",
+            computer: "الحاسوب",
+            computerDesc: "حاسوب عالي الجودة، لابتوب، وإكسسوارات لجميع احتياجاتكم الحاسوبية.",
+            gaming: "الألعاب",
+            gamingDesc: "أجهزة ألعاب، وحدات تحكم، إكسسوارات ومحيطات للحصول على تجربة ألعاب مثالية.",
+            network: "الشبكة",
+            networkDesc: "راوترات، مبدلات، كابلات، ومعدات شبكات للاتصال الموثوق.",
+            mobile: "إكسسوارات المحمول",
+            mobileDesc: "أغطية الهاتف، شواحن، واقيات الشاشة، وإكسسوارات محمول أخرى.",
           },
           contact: {
             title: "تواصل معنا",
             subtitle: "تواصل معنا اليوم",
             getInTouch: "تواصل معنا",
-            address: "123 شارع التجارة، المدينة، الولاية 12345",
-            phone: "+1 (555) 123-4567",
-            email: "info@yourbusiness.com",
+            address: "شقامي كشتي، حلبجة شهيد، العراق",
+            phone: "+964 750 125 2131",
+            email: "soranstore@outlook.com",
             hours: "ساعات العمل",
-            mondayFriday: "الاثنين - الجمعة: 9:00 صباحاً - 6:00 مساءً",
-            saturday: "السبت: 10:00 صباحاً - 4:00 مساءً",
-            sunday: "الأحد: مغلق",
+            weekdays: "السبت - الخميس: 8:00 صباحاً - 11:00 مساءً",
+            friday: "الجمعة: 9:00 صباحاً - 11:00 صباحاً / 2:00 مساءً - 11:00 مساءً",
+            call: "اتصال",
+            whatsapp: "محادثة واتساب",
             name: "الاسم",
             nameplaceholder: "اسمك",
             emailLabel: "البريد الإلكتروني",
@@ -1165,7 +1490,7 @@
             quickLinks: "روابط سريعة",
             products: "المنتجات",
             follow: "تابعنا",
-            copyright: "© 2024 اسم شركتك. جميع الحقوق محفوظة.",
+            copyright: "© 2025 سـۆران سـتور. جميع الحقوق محفوظة.",
           },
         },
         ku: {
@@ -1173,12 +1498,13 @@
             home: "سەرەکی",
             about: "دەربارەمان",
             services: "خزمەتگوزاری",
+            gallery: "پێشاندەر",
             products: "بەرهەمەکان",
             name: "سـۆران سـتۆر",
             contact: "پەیوەندی",
           },
           hero: {
-            title: "بەخێربێن بۆ کارەکەتان",
+            title: "بەخێربێن بۆ سـۆران سـتۆر",
             subtitle:
               "بەرهەمی کوالیتی بەرز و خزمەتگوزاری تایبەت بۆ هەموو پێداویستیەکانتان",
             cta: "دەست پێبکە",
@@ -1198,45 +1524,57 @@
             delivery: "گەیاندنی خێرا",
           },
           services: {
-            title: "کارەکانی ڕۆژانە و خزمەتگوزاری",
-            subtitle: "ئەوەی هەموو ڕۆژێک دەیکەین بۆ باشتر خزمەتتان",
-            maintenance: "چاککردنەوەی ڕۆژانە",
-            maintenanceDesc:
-              "چاکسازی بەردەوام و پشکنینی کوالیتی دەکەین بۆ دڵنیابوون لەوەی هەموو بەرهەم و خزمەتگوزاریەکانمان باڵاترین پێوەرەکان دابین دەکەن.",
-            processing: "کارکردن لەسەر داواکاری",
-            processingDesc:
-              "تیمەکەمان بە کارایی کار لەسەر داواکاریەکان دەکات، کە کات و جێبەجێکردنی ورد دەبەخشێت بۆ هەموو کڕیارانمان.",
-            support: "پشتگیری کڕیار",
-            supportDesc:
-              "پشتگیری کڕیارانی ڕۆژانە و ڕاوێژکاری بۆ یارمەتیدانتان لە دۆزینەوەی چارەسەرە تەواوەکان بۆ پێداویستیەکانتان.",
+            title: "خزمەتگوزاری پیشەیی",
+            subtitle: "چارەسەری تەواو بۆ هەموو پێداویستی تەکنەلۆژیەکانتان",
+            computerRepair: "چاککردنەوە و چاودێری کۆمپیوتەر",
+            computerRepairDesc: "خزمەتگوزاری چاککردنەوەی پسپۆرانە کە پشکنینی ڕەقەکاڵا، چارەسەری کێشەی نەرمەکاڵا، و باشترکردنی سیستەم لەخۆدەگرێت.",
+            gaming: "چارەسەری یاری",
+            gamingDesc: "دروستکردنی کۆمپیوتەری یاری تایبەت، چاککردنەوەی کۆنسۆڵ، و کەرەستەی یاری بۆ باشترکردنی ئەزموونەکەتان.",
+            network: "چارەسەری تۆڕ",
+            networkDesc: "دانانی تۆڕی پیشەیی، چارەسەری کێشە، و چارەسەری ئاسایش بۆ ماڵ و بازرگانییەکان.",
+            mobile: "خزمەتگوزاری ئامێری گواستراوە",
+            mobileDesc: "چاککردنەوەی مۆبایل، گۆڕینی شاشە، و کۆمەڵێک کەرەستەی مۆبایل.",
+            technical: "پشتگیری تەکنیکی",
+            technicalDesc: "پشتگیری تەکنیکی تەواو و خزمەتگوزاری ڕاوێژکاری بۆ هەموو پێداویستی تەکنەلۆژیەکانتان.",
+            installation: "خزمەتگوزاری دامەزراندن",
+            installationDesc: "خزمەتگوزاری دامەزراندنی پیشەیی بۆ کۆمپیوتەر، تۆڕ، و جۆراوجۆر ئامێری ئەلیکترۆنی.",
+          },
+          gallery: {
+            title: "پێشاندەری کارەکانمان",
+            subtitle: "پیشاندانی شارەزایی و کوالیتی کارەکەمان",
+            computerWork: "خزمەتی کۆمپیوتەر",
+            gamingSetup: "دانانی یاری",
+            networkInstall: "دامەزراندنی تۆڕ",
+            mobileRepair: "چاککردنەوەی مۆبایل",
+            pcBuilding: "دروستکردنی کۆمپیوتەر",
+            repairWork: "کاری چاککردنەوە",
+            wifiSetup: "دانانی وای فای",
+            security: "دانانی ئاسایش",
           },
           products: {
             title: "جۆرەکانی بەرهەم",
             subtitle: "کۆمەڵە بەرهەمە فراوانەکانمان بگەڕێن",
-            category1: "جۆری یەکەم",
-            category1Desc:
-              "وەصفی جۆری یەکەمی بەرهەمەکانتان و ئەوەی لەخۆدەگرێت.",
-            category2: "جۆری دووەم",
-            category2Desc:
-              "وەصفی جۆری دووەمی بەرهەمەکانتان و ئەوەی لەخۆدەگرێت.",
-            category3: "جۆری سێیەم",
-            category3Desc:
-              "وەصفی جۆری سێیەمی بەرهەمەکانتان و ئەوەی لەخۆدەگرێت.",
-            category4: "جۆری چوارەم",
-            category4Desc:
-              "وەصفی جۆری چوارەمی بەرهەمەکانتان و ئەوەی لەخۆدەگرێت.",
+            computer: "کۆمپیوتەر",
+            computerDesc: "کۆمپیوتەر، لاپتۆپ، و کەرەستەی کوالیتی بەرز بۆ هەموو پێداویستی کۆمپیوتەرییەکانتان.",
+            gaming: "یاری",
+            gamingDesc: "کۆمپیوتەری یاری، کۆنسۆڵ، کەرەستە و جهازەکان بۆ ئەزموونی یاری تەواو.",
+            network: "تۆڕ",
+            networkDesc: "ڕاوتەر، سویچ، کەیبڵ، و کەرەستەی تۆڕ بۆ پەیوەندی پشتبەستراو.",
+            mobile: "کەرەستەی مۆبایل",
+            mobileDesc: "بەرگریی تەلەفۆن، شارژەر، پارێزەری شاشە، و کەرەستەی مۆبایلی تر.",
           },
           contact: {
             title: "پەیوەندیمان پێوەبکەن",
             subtitle: "ئەمڕۆ پەیوەندیمان پێوەبکەن",
             getInTouch: "پەیوەندی بکەن",
-            address: "123 شەقامی بازرگانی، شار، ویلایەت 12345",
-            phone: "+1 (555) 123-4567",
-            email: "info@yourbusiness.com",
+            address: "شقامی گشتی، حەلەبجە شەهید، عێراق",
+            phone: "+964 750 125 2131",
+            email: "soranstore@outlook.com",
             hours: "کاتەکانی کارکردن",
-            mondayFriday: "دووشەممە - هەینی: 9:00 بەیانی - 6:00 ئێوارە",
-            saturday: "شەممە: 10:00 بەیانی - 4:00 ئێوارە",
-            sunday: "یەکشەممە: داخراو",
+            weekdays: "شەممە - پێنجشەممە: 8:00 بەیانی - 11:00 شەو",
+            friday: "هەینی: 9:00 بەیانی - 11:00 بەیانی / 2:00 نیوەڕۆ - 11:00 شەو",
+            call: "پەیوەندی",
+            whatsapp: "گفتوگۆی واتساپ",
             name: "ناو",
             nameplaceholder: "ناوەکەت",
             emailLabel: "ئیمەیل",
@@ -1252,7 +1590,7 @@
             quickLinks: "بەستەرە خێراکان",
             products: "بەرهەمەکان",
             follow: "شوێنمان بکەون",
-            copyright: "© 2024 ناوی کارەکەتان. هەموو مافەکان پارێزراون.",
+            copyright: "© 2025 سـۆران سـتۆر. هەموو مافەکان پارێزراون.",
           },
         },
       };
@@ -1313,6 +1651,31 @@
           .reduce((current, key) => current && current[key], obj);
       }
 
+      // Theme toggle functionality
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+
+      function toggleTheme() {
+        const htmlElement = document.documentElement;
+        const isDark = htmlElement.classList.contains('dark');
+        
+        if (isDark) {
+          htmlElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        } else {
+          htmlElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        }
+      }
+
       // Initialize language
       function initializeLanguage() {
         const savedLanguage = localStorage.getItem("preferredLanguage");
@@ -1321,123 +1684,299 @@
         }
       }
 
-      // Language switcher functionality
-      document
-        .getElementById("language-btn")
-        .addEventListener("click", function () {
+      // Event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeTheme();
+        initializeLanguage();
+
+        // Theme toggle button
+        document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+
+        // Language switcher functionality
+        document
+          .getElementById("language-btn")
+          .addEventListener("click", function () {
+            const dropdown = document.getElementById("language-dropdown");
+            dropdown.classList.toggle("hidden");
+          });
+
+        // Language option handlers
+        document.querySelectorAll(".language-option").forEach((option) => {
+          option.addEventListener("click", function () {
+            const lang = this.getAttribute("data-lang");
+            setLanguage(lang);
+            document.getElementById("language-dropdown").classList.add("hidden");
+          });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+          const langBtn = document.getElementById("language-btn");
           const dropdown = document.getElementById("language-dropdown");
-          dropdown.classList.toggle("hidden");
+
+          if (
+            !langBtn.contains(event.target) &&
+            !dropdown.contains(event.target)
+          ) {
+            dropdown.classList.add("hidden");
+          }
         });
 
-      // Language option handlers
-      document.querySelectorAll(".language-option").forEach((option) => {
-        option.addEventListener("click", function () {
-          const lang = this.getAttribute("data-lang");
-          setLanguage(lang);
-          document.getElementById("language-dropdown").classList.add("hidden");
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        mobileMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+              // Close mobile menu if open
+              mobileMenu.classList.add("hidden");
+            }
+          });
+        });
+
+        // Form submission handler
+        document.querySelector("form").addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Create custom success message
+          const successMessage = document.createElement("div");
+          successMessage.className =
+            "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300";
+          successMessage.textContent =
+            translations[currentLanguage].contact.successMessage;
+          document.body.appendChild(successMessage);
+
+          // Remove message after 3 seconds
+          setTimeout(() => {
+            successMessage.classList.add("opacity-0");
+            setTimeout(() => {
+              document.body.removeChild(successMessage);
+            }, 300);
+          }, 3000);
+
+          // Reset form
+          this.reset();
+        });
+
+        // Add fade-in animation to elements when they come into view
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("fade-in");
+            }
+          });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll("section").forEach((section) => {
+          observer.observe(section);
         });
       });
 
-      // Close dropdown when clicking outside
-      document.addEventListener("click", function (event) {
-        const langBtn = document.getElementById("language-btn");
-        const dropdown = document.getElementById("language-dropdown");
-
-        if (
-          !langBtn.contains(event.target) &&
-          !dropdown.contains(event.target)
-        ) {
-          dropdown.classList.add("hidden");
-        }
-      });
-
-      // Dark mode support
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        document.documentElement.classList.add("dark");
-      }
+      // Theme change listener
       window
         .matchMedia("(prefers-color-scheme: dark)")
         .addEventListener("change", (event) => {
-          if (event.matches) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
+          if (!localStorage.getItem('theme')) {
+            if (event.matches) {
+              document.documentElement.classList.add("dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+            }
           }
         });
 
-      // Mobile menu toggle
-      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
-      const mobileMenu = document.getElementById("mobile-menu");
-
-      mobileMenuBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-      });
-
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-            // Close mobile menu if open
-            mobileMenu.classList.add("hidden");
-          }
-        });
-      });
-
-      // Form submission handler
-      document.querySelector("form").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        // Create custom success message
-        const successMessage = document.createElement("div");
-        successMessage.className =
-          "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300";
-        successMessage.textContent =
-          translations[currentLanguage].contact.successMessage;
-        document.body.appendChild(successMessage);
-
-        // Remove message after 3 seconds
-        setTimeout(() => {
-          successMessage.classList.add("opacity-0");
-          setTimeout(() => {
-            document.body.removeChild(successMessage);
-          }, 300);
-        }, 3000);
-
-        // Reset form
-        this.reset();
-      });
-
-      // Add fade-in animation to elements when they come into view
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
+      // Product data
+      const productData = {
+        computer: [
+          { id: 1, name: "Dell Laptop i7", price: "$899", image: "computer.jpg", description: "High-performance laptop with Intel i7 processor, 16GB RAM, 512GB SSD" },
+          { id: 2, name: "HP Desktop PC", price: "$649", image: "computer.jpg", description: "Powerful desktop computer for office and home use" },
+          { id: 3, name: "MacBook Pro", price: "$1299", image: "computer.jpg", description: "Apple MacBook Pro with M1 chip, perfect for professionals" },
+          { id: 4, name: "Gaming Laptop", price: "$1199", image: "computer.jpg", description: "High-end gaming laptop with RTX graphics card" },
+          { id: 5, name: "Chromebook", price: "$299", image: "computer.jpg", description: "Lightweight Chromebook for students and basic tasks" },
+          { id: 6, name: "All-in-One PC", price: "$799", image: "computer.jpg", description: "Space-saving all-in-one computer with touchscreen" }
+        ],
+        gaming: [
+          { id: 7, name: "Gaming PC RTX 4080", price: "$1899", image: "gaming1.jpg", description: "Custom gaming PC with RTX 4080, 32GB RAM, RGB lighting" },
+          { id: 8, name: "PlayStation 5", price: "$499", image: "gaming1.jpg", description: "Latest PlayStation 5 console with DualSense controller" },
+          { id: 9, name: "Xbox Series X", price: "$499", image: "gaming1.jpg", description: "Microsoft Xbox Series X with 1TB storage" },
+          { id: 10, name: "Gaming Chair", price: "$249", image: "gaming1.jpg", description: "Ergonomic gaming chair with RGB lighting and lumbar support" },
+          { id: 11, name: "Mechanical Keyboard", price: "$129", image: "gaming1.jpg", description: "RGB mechanical gaming keyboard with Cherry MX switches" },
+          { id: 12, name: "Gaming Headset", price: "$79", image: "gaming1.jpg", description: "7.1 surround sound gaming headset with noise cancellation" }
+        ],
+        network: [
+          { id: 13, name: "WiFi 6 Router", price: "$179", image: "network.jpg", description: "High-speed WiFi 6 router with mesh capability" },
+          { id: 14, name: "Network Switch", price: "$89", image: "network.jpg", description: "24-port gigabit network switch for office use" },
+          { id: 15, name: "Ethernet Cable", price: "$15", image: "network.jpg", description: "Cat6 ethernet cable - 10 meter length" },
+          { id: 16, name: "Access Point", price: "$129", image: "network.jpg", description: "Wireless access point for extended coverage" },
+          { id: 17, name: "Modem", price: "$99", image: "network.jpg", description: "DOCSIS 3.1 cable modem for high-speed internet" },
+          { id: 18, name: "Network Cabinet", price: "$299", image: "network.jpg", description: "19-inch network rack cabinet for professional installation" }
+        ],
+        mobile: [
+          { id: 19, name: "iPhone Case", price: "$29", image: "mobile.jpg", description: "Premium protective case for iPhone with wireless charging support" },
+          { id: 20, name: "Samsung Charger", price: "$19", image: "mobile.jpg", description: "Fast charging cable for Samsung devices" },
+          { id: 21, name: "Screen Protector", price: "$12", image: "mobile.jpg", description: "Tempered glass screen protector with 9H hardness" },
+          { id: 22, name: "Power Bank", price: "$39", image: "mobile.jpg", description: "20000mAh portable power bank with fast charging" },
+          { id: 23, name: "Wireless Earbuds", price: "$89", image: "mobile.jpg", description: "Bluetooth wireless earbuds with noise cancellation" },
+          { id: 24, name: "Phone Stand", price: "$15", image: "mobile.jpg", description: "Adjustable phone stand for desk and nightstand" }
+        ]
       };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("fade-in");
+      // Product modal functionality
+      function createProductModal() {
+        const modal = document.createElement('div');
+        modal.id = 'product-modal';
+        modal.className = 'product-modal hidden';
+        modal.innerHTML = `
+          <div class="product-modal-content p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2 id="modal-title" class="text-2xl font-bold text-gray-900 dark:text-white"></h2>
+              <button id="close-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="mb-6">
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="product-search" 
+                  placeholder="Search products..." 
+                  class="w-full px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base"
+                />
+                <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-96 overflow-y-auto">
+              <!-- Products will be inserted here -->
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Event listeners
+        document.getElementById('close-modal').addEventListener('click', closeProductModal);
+        document.getElementById('product-search').addEventListener('input', filterProducts);
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            closeProductModal();
           }
         });
-      }, observerOptions);
+      }
 
-      // Observe all sections
-      document.querySelectorAll("section").forEach((section) => {
-        observer.observe(section);
-      });
+      function openProductModal(category) {
+        const modal = document.getElementById('product-modal');
+        const title = document.getElementById('modal-title');
+        
+        // Update title based on category
+        const categoryTitles = {
+          computer: translations[currentLanguage].products.computer,
+          gaming: translations[currentLanguage].products.gaming,
+          network: translations[currentLanguage].products.network,
+          mobile: translations[currentLanguage].products.mobile
+        };
+        
+        title.textContent = categoryTitles[category] || 'Products';
+        
+        // Display products
+        displayProducts(productData[category] || []);
+        
+        // Show modal
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
 
-      // Initialize everything when page loads
+      function closeProductModal() {
+        const modal = document.getElementById('product-modal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        
+        // Clear search
+        document.getElementById('product-search').value = '';
+      }
+
+      function displayProducts(products) {
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+        
+        products.forEach(product => {
+          const productCard = document.createElement('div');
+          productCard.className = 'product-card';
+          productCard.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-gray-900 dark:text-white text-lg">${product.name}</h3>
+                <span class="price-tag">${product.price}</span>
+              </div>
+              <p class="text-gray-600 dark:text-gray-300 text-sm">${product.description}</p>
+              <button class="mt-3 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors duration-200">
+                Add to Cart
+              </button>
+            </div>
+          `;
+          grid.appendChild(productCard);
+        });
+      }
+
+      function filterProducts(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        const category = getCurrentCategory();
+        const products = productData[category] || [];
+        
+        const filteredProducts = products.filter(product => 
+          product.name.toLowerCase().includes(searchTerm) ||
+          product.description.toLowerCase().includes(searchTerm)
+        );
+        
+        displayProducts(filteredProducts);
+      }
+
+      let currentCategory = '';
+      function getCurrentCategory() {
+        return currentCategory;
+      }
+
+      // Add click handlers to product categories
+      function initializeProductCategories() {
+        document.querySelectorAll('.product-category').forEach(category => {
+          category.addEventListener('click', function() {
+            const categoryType = this.getAttribute('data-category');
+            currentCategory = categoryType;
+            openProductModal(categoryType);
+          });
+        });
+      }
+
+      // Initialize product modal when page loads
       document.addEventListener("DOMContentLoaded", function () {
-        initializeLanguage();
+        // ... existing code ...
+        createProductModal();
+        initializeProductCategories();
       });
     </script>
   </body>
