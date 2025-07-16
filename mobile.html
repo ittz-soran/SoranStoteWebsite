@@ -1085,18 +1085,44 @@
         if (hash.startsWith('#product-')) {
           const productSlug = hash.replace('#product-', '');
           
-          // Find product by matching slug
-          const product = allProducts.find(p => {
-            const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            return slug === productSlug;
-          });
-          
-          if (product) {
-            // Wait a bit for products to load
-            setTimeout(() => {
+          // Function to find and open product modal
+          function findAndOpenProduct() {
+            if (allProducts.length === 0) {
+              // Products not loaded yet, try again
+              setTimeout(findAndOpenProduct, 200);
+              return;
+            }
+            
+            // Find product by matching slug
+            const product = allProducts.find(p => {
+              const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+              return slug === productSlug;
+            });
+            
+            if (product) {
+              // Hide products grid and show only the modal
+              const productsGrid = document.getElementById('products-grid');
+              const loadingState = document.getElementById('loading-state');
+              const errorState = document.getElementById('error-state');
+              
+              // Hide all other content
+              loadingState.classList.add('hidden');
+              errorState.classList.add('hidden');
+              productsGrid.classList.add('hidden');
+              
+              // Open the modal directly
               openProductModal(product);
-            }, 500);
+              
+              // Update page title
+              document.title = `${product.name} - Mobile Accessories - Soran Store`;
+            } else {
+              // Product not found, show all products
+              displayProducts(allProducts);
+            }
           }
+          
+          // Start checking for products
+          findAndOpenProduct();
         }
       }
 
