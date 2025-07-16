@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;"
+    />
+    <!-- Add Google Fonts for Arabic/Kurdish support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Great+Vibes&family=Judson:ital,wght@0,400;0,700;1,400&family=Noto+Kufi+Arabic:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobile Accessories - Soran Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#5D5CDE",
+              secondary: "#4F46E5",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .gradient-bg {
+        background: linear-gradient(135deg, #5d5cde 0%, #4f46e5 100%);
+      }
+      .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      /* Product page styles */
+      .product-card {
+        background: white;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .dark .product-card {
+        background: #374151;
+      }
+
+      .product-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .price-tag {
+        background: linear-gradient(135deg, #5d5cde, #4f46e5);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+
+      /* Breadcrumb styles */
+      .breadcrumb {
+        color: #6b7280;
+        transition: color 0.2s ease;
+      }
+
+      .breadcrumb:hover {
+        color: #5d5cde;
+      }
+
+      .breadcrumb-separator {
+        margin: 0 0.5rem;
+        color: #9ca3af;
+      }
+
+      /* RTL Support */
+      [dir="rtl"] .space-x-8 > * + * {
+        margin-left: 0;
+        margin-right: 2rem;
+      }
+
+      [dir="rtl"] .space-x-4 > * + * {
+        margin-left: 0;
+        margin-right: 1rem;
+      }
+
+      /* Language switcher */
+      .language-switcher {
+        position: relative;
+      }
+
+      .language-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        min-width: 140px;
+      }
+
+      .dark .language-dropdown {
+        background: #374151;
+        border-color: #4b5563;
+      }
+
+      [dir="rtl"] .language-dropdown {
+        right: auto;
+        left: 0;
+      }
+
+      /* Add font-family declarations */
+      [lang="ar"],
+      [lang="ku"] body {
+        font-family: "Noto Kufi Arabic", sans-serif;
+      }
+
+      [lang="ar"] h1,
+      [lang="ar"] h2,
+      [lang="ar"] h3,
+      [lang="ar"] h4,
+      [lang="ar"] h5,
+      [lang="ar"] h6,
+      [lang="ku"] h1,
+      [lang="ku"] h2,
+      [lang="ku"] h3,
+      [lang="ku"] h4,
+      [lang="ku"] h5,
+      [lang="ku"] h6 {
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"
+  >
+    <!-- Navigation (same as main page) -->
+    <nav
+      class="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-colors duration-300"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <h1
+                class="text-2xl font-bold text-primary"
+                data-translate="nav.name"
+              >
+                Soran Store
+              </h1>
+            </div>
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="index.html"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.home"
+                >Home</a
+              >
+              <a
+                href="index.html#about"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.about"
+                >About</a
+              >
+              <a
+                href="index.html#services"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.services"
+                >Services</a
+              >
+              <a
+                href="index.html#gallery"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.gallery"
+                >Gallery</a
+              >
+              <a
+                href="index.html#products"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.products"
+                >Products</a
+              >
+              <a
+                href="index.html#contact"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200"
+                data-translate="nav.contact"
+                >Contact</a
+              >
+            </div>
+          </div>
+
+          <!-- Theme Toggle, Language Switcher & Mobile Menu -->
+          <div class="flex items-center space-x-4">
+            <!-- Dark/Light Mode Toggle -->
+            <button
+              id="theme-toggle"
+              class="text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              title="Toggle theme"
+            >
+              <svg
+                id="theme-icon-light"
+                class="w-5 h-5 hidden dark:block"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <svg
+                id="theme-icon-dark"
+                class="w-5 h-5 block dark:hidden"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+              <button
+                id="language-btn"
+                class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                  ></path>
+                </svg>
+                <span id="current-lang">EN</span>
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </button>
+              <div id="language-dropdown" class="language-dropdown hidden">
+                <button
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
+                  data-lang="en"
+                >
+                  <span class="text-lg">🇺🇸</span>
+                  <span>English</span>
+                </button>
+                <button
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
+                  data-lang="ar"
+                >
+                  <span class="text-lg">🇸🇦</span>
+                  <span>العربية</span>
+                </button>
+                <button
+                  class="language-option w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2"
+                  data-lang="ku"
+                >
+                  <span class="text-lg">🇮🇶</span>
+                  <span>کوردی</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+              <button
+                id="mobile-menu-btn"
+                class="text-gray-700 dark:text-gray-300 hover:text-primary p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="md:hidden hidden">
+        <div
+          class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t dark:border-gray-700"
+        >
+          <a
+            href="index.html"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.home"
+            >Home</a
+          >
+          <a
+            href="index.html#about"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.about"
+            >About</a
+          >
+          <a
+            href="index.html#services"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.services"
+            >Services</a
+          >
+          <a
+            href="index.html#gallery"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.gallery"
+            >Gallery</a
+          >
+          <a
+            href="index.html#products"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.products"
+            >Products</a
+          >
+          <a
+            href="index.html#contact"
+            class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-primary"
+            data-translate="nav.contact"
+            >Contact</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <section
+      class="bg-gray-50 dark:bg-gray-800 py-4 transition-colors duration-300"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex items-center space-x-2 text-sm">
+          <a
+            href="index.html"
+            class="breadcrumb"
+            data-translate="breadcrumb.home"
+            >Home</a
+          >
+          <span class="breadcrumb-separator">></span>
+          <a
+            href="index.html#products"
+            class="breadcrumb"
+            data-translate="breadcrumb.products"
+            >Products</a
+          >
+          <span class="breadcrumb-separator">></span>
+          <span
+            class="text-gray-900 dark:text-gray-100 font-medium"
+            data-translate="breadcrumb.mobile"
+            >Mobile Accessories</span
+          >
+        </nav>
+      </div>
+    </section>
+
+    <!-- Header Section -->
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+          <h1
+            class="text-4xl font-bold text-gray-900 dark:text-white mb-4"
+            data-translate="mobile.title"
+          >
+            Mobile Accessories
+          </h1>
+          <p
+            class="text-xl text-gray-600 dark:text-gray-300"
+            data-translate="mobile.subtitle"
+          >
+            Premium mobile accessories for all your devices
+          </p>
+        </div>
+
+        <!-- Back to Products Button -->
+        <div class="mb-8">
+          <a
+            href="index.html#products"
+            class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-secondary transition-colors duration-200"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
+            <span data-translate="mobile.backToProducts">Back to Products</span>
+          </a>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+          <div class="relative max-w-md mx-auto">
+            <input
+              type="text"
+              id="product-search"
+              placeholder="Search products..."
+              class="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-base"
+              data-translate-placeholder="mobile.searchPlaceholder"
+            />
+            <svg
+              class="absolute left-4 top-3.5 w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div
+          id="products-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          <!-- Products will be inserted here by JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden text-center py-12">
+          <svg
+            class="w-16 h-16 text-gray-400 mx-auto mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+          <h3
+            class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
+            data-translate="mobile.noResults"
+          >
+            No products found
+          </h3>
+          <p
+            class="text-gray-600 dark:text-gray-400"
+            data-translate="mobile.noResultsDesc"
+          >
+            Try adjusting your search terms to find what you're looking for.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer (same as main page) -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-2xl font-bold text-primary mb-4">Soran Store</h3>
+            <p class="text-gray-400" data-translate="footer.tagline">
+              Your trusted partner for quality products and exceptional service.
+            </p>
+          </div>
+
+          <div>
+            <h4
+              class="text-lg font-semibold mb-4"
+              data-translate="footer.quickLinks"
+            >
+              Quick Links
+            </h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a
+                  href="index.html"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.home"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="index.html#about"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.about"
+                  >About</a
+                >
+              </li>
+              <li>
+                <a
+                  href="index.html#services"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.services"
+                  >Services</a
+                >
+              </li>
+              <li>
+                <a
+                  href="index.html#gallery"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="nav.gallery"
+                  >Gallery</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4
+              class="text-lg font-semibold mb-4"
+              data-translate="footer.products"
+            >
+              Products
+            </h4>
+            <ul class="space-y-2 text-gray-400">
+              <li>
+                <a
+                  href="computer.html"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="products.computer"
+                  >Computer</a
+                >
+              </li>
+              <li>
+                <a
+                  href="gaming.html"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="products.gaming"
+                  >Gaming</a
+                >
+              </li>
+              <li>
+                <a
+                  href="network.html"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="products.network"
+                  >Network</a
+                >
+              </li>
+              <li>
+                <a
+                  href="mobile.html"
+                  class="hover:text-white transition-colors duration-200"
+                  data-translate="products.mobile"
+                  >Mobile Accessories</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4
+              class="text-lg font-semibold mb-4"
+              data-translate="footer.follow"
+            >
+              Follow Us
+            </h4>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors duration-200"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors duration-200"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors duration-200"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                  ></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"
+        >
+          <p data-translate="footer.copyright">
+            © 2025 Soran Store. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Translation data
+      const translations = {
+        en: {
+          nav: {
+            name: "Soran Store",
+            home: "Home",
+            about: "About",
+            services: "Services",
+            gallery: "Gallery",
+            products: "Products",
+            contact: "Contact",
+          },
+          breadcrumb: {
+            home: "Home",
+            products: "Products",
+            mobile: "Mobile Accessories",
+          },
+          mobile: {
+            title: "Mobile Accessories",
+            subtitle: "Premium mobile accessories for all your devices",
+            backToProducts: "Back to Products",
+            searchPlaceholder: "Search products...",
+            noResults: "No products found",
+            noResultsDesc:
+              "Try adjusting your search terms to find what you're looking for.",
+            addToCart: "Add to Cart",
+          },
+          products: {
+            computer: "Computer",
+            gaming: "Gaming",
+            network: "Network",
+            mobile: "Mobile Accessories",
+          },
+          footer: {
+            tagline:
+              "Your trusted partner for quality products and exceptional service.",
+            quickLinks: "Quick Links",
+            products: "Products",
+            follow: "Follow Us",
+            copyright: "© 2025 Soran Store. All rights reserved.",
+          },
+        },
+        ar: {
+          nav: {
+            name: "سـۆران سـتور",
+            home: "الرئيسية",
+            about: "من نحن",
+            services: "الخدمات",
+            gallery: "المعرض",
+            products: "المنتجات",
+            contact: "تواصل معنا",
+          },
+          breadcrumb: {
+            home: "الرئيسية",
+            products: "المنتجات",
+            mobile: "إكسسوارات المحمول",
+          },
+          mobile: {
+            title: "إكسسوارات المحمول",
+            subtitle: "إكسسوارات محمول متميزة لجميع أجهزتكم",
+            backToProducts: "العودة للمنتجات",
+            searchPlaceholder: "البحث في المنتجات...",
+            noResults: "لم يتم العثور على منتجات",
+            noResultsDesc: "حاول تعديل كلمات البحث للعثور على ما تبحث عنه.",
+            addToCart: "إضافة للسلة",
+          },
+          products: {
+            computer: "الحاسوب",
+            gaming: "الألعاب",
+            network: "الشبكة",
+            mobile: "إكسسوارات المحمول",
+          },
+          footer: {
+            tagline:
+              "شريككم الموثوق للمنتجات عالية الجودة والخدمة الاستثنائية.",
+            quickLinks: "روابط سريعة",
+            products: "المنتجات",
+            follow: "تابعنا",
+            copyright: "© 2025 سـۆران سـتور. جميع الحقوق محفوظة.",
+          },
+        },
+        ku: {
+          nav: {
+            name: "سـۆران سـتۆر",
+            home: "سەرەکی",
+            about: "دەربارەمان",
+            services: "خزمەتگوزاری",
+            gallery: "پێشاندەر",
+            products: "بەرهەمەکان",
+            contact: "پەیوەندی",
+          },
+          breadcrumb: {
+            home: "سەرەکی",
+            products: "بەرهەمەکان",
+            mobile: "کەرەستەی مۆبایل",
+          },
+          mobile: {
+            title: "کەرەستەی مۆبایل",
+            subtitle: "کەرەستەی مۆبایلی باش بۆ هەموو ئامێرەکانتان",
+            backToProducts: "گەڕانەوە بۆ بەرهەمەکان",
+            searchPlaceholder: "گەڕان لە بەرهەمەکان...",
+            noResults: "هیچ بەرهەمێک نەدۆزرایەوە",
+            noResultsDesc:
+              "هەوڵ بدە وشەکانی گەڕان بگۆڕیت بۆ دۆزینەوەی ئەوەی دەیەوێت.",
+            addToCart: "زیادکردن بۆ سەبەتە",
+          },
+          products: {
+            computer: "کۆمپیوتەر",
+            gaming: "یاری",
+            network: "تۆڕ",
+            mobile: "کەرەستەی مۆبایل",
+          },
+          footer: {
+            tagline:
+              "هاوبەشی متمانەپێکراوتان بۆ بەرهەمی کوالیتی بەرز و خزمەتگوزاری تایبەت.",
+            quickLinks: "بەستەرە خێراکان",
+            products: "بەرهەمەکان",
+            follow: "شوێنمان بکەون",
+            copyright: "© 2025 سـۆران سـتۆر. هەموو مافەکان پارێزراون.",
+          },
+        },
+      };
+
+      // Mobile accessories product data
+      const mobileProducts = [
+        {
+          id: 19,
+          name: "iPhone Case",
+          price: "$29",
+          image: "mobile.jpg",
+          description:
+            "Premium protective case for iPhone with wireless charging support",
+        },
+        {
+          id: 20,
+          name: "Samsung Charger",
+          price: "$19",
+          image: "mobile.jpg",
+          description: "Fast charging cable for Samsung devices",
+        },
+        {
+          id: 21,
+          name: "Screen Protector",
+          price: "$12",
+          image: "mobile.jpg",
+          description: "Tempered glass screen protector with 9H hardness",
+        },
+        {
+          id: 22,
+          name: "Power Bank",
+          price: "$39",
+          image: "mobile.jpg",
+          description: "20000mAh portable power bank with fast charging",
+        },
+        {
+          id: 23,
+          name: "Wireless Earbuds",
+          price: "$89",
+          image: "mobile.jpg",
+          description: "Bluetooth wireless earbuds with noise cancellation",
+        },
+        {
+          id: 24,
+          name: "Phone Stand",
+          price: "$15",
+          image: "mobile.jpg",
+          description: "Adjustable phone stand for desk and nightstand",
+        },
+        {
+          id: 25,
+          name: "Car Mount",
+          price: "$25",
+          image: "mobile.jpg",
+          description: "Magnetic car mount for safe hands-free driving",
+        },
+        {
+          id: 26,
+          name: "Bluetooth Speaker",
+          price: "$59",
+          image: "mobile.jpg",
+          description: "Portable Bluetooth speaker with rich bass sound",
+        },
+      ];
+
+      // Language and RTL functionality
+      let currentLanguage = "en";
+      const rtlLanguages = ["ar", "ku"];
+
+      function setLanguage(lang) {
+        currentLanguage = lang;
+        const htmlElement = document.documentElement;
+
+        // Set language attribute
+        htmlElement.setAttribute("lang", lang);
+
+        // Set direction
+        if (rtlLanguages.includes(lang)) {
+          htmlElement.setAttribute("dir", "rtl");
+        } else {
+          htmlElement.setAttribute("dir", "ltr");
+        }
+
+        // Update current language display
+        const langCodes = { en: "EN", ar: "AR", ku: "KU" };
+        document.getElementById("current-lang").textContent = langCodes[lang];
+
+        // Update all translatable elements
+        const elements = document.querySelectorAll("[data-translate]");
+        elements.forEach((element) => {
+          const key = element.getAttribute("data-translate");
+          const translation = getNestedTranslation(translations[lang], key);
+          if (translation) {
+            element.textContent = translation;
+          }
+        });
+
+        // Update search placeholder
+        const searchInput = document.getElementById("product-search");
+        if (searchInput) {
+          searchInput.placeholder = translations[lang].mobile.searchPlaceholder;
+        }
+
+        // Store language preference
+        localStorage.setItem("preferredLanguage", lang);
+      }
+
+      function getNestedTranslation(obj, path) {
+        return path
+          .split(".")
+          .reduce((current, key) => current && current[key], obj);
+      }
+
+      // Theme toggle functionality
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+
+      function toggleTheme() {
+        const htmlElement = document.documentElement;
+        const isDark = htmlElement.classList.contains("dark");
+
+        if (isDark) {
+          htmlElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          htmlElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+      }
+
+      // Initialize language
+      function initializeLanguage() {
+        const savedLanguage = localStorage.getItem("preferredLanguage");
+        if (savedLanguage && translations[savedLanguage]) {
+          setLanguage(savedLanguage);
+        }
+      }
+
+      // Display products
+      function displayProducts(products) {
+        const grid = document.getElementById("products-grid");
+        const noResults = document.getElementById("no-results");
+
+        grid.innerHTML = "";
+
+        if (products.length === 0) {
+          grid.classList.add("hidden");
+          noResults.classList.remove("hidden");
+          return;
+        }
+
+        grid.classList.remove("hidden");
+        noResults.classList.add("hidden");
+
+        products.forEach((product) => {
+          const productCard = document.createElement("div");
+          productCard.className = "product-card";
+          productCard.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-semibold text-gray-900 dark:text-white text-lg">${product.name}</h3>
+                <span class="price-tag">${product.price}</span>
+              </div>
+              <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">${product.description}</p>
+              <button class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary transition-colors duration-200">
+                ${translations[currentLanguage].mobile.addToCart}
+              </button>
+            </div>
+          `;
+          grid.appendChild(productCard);
+        });
+      }
+
+      // Filter products based on search
+      function filterProducts(searchTerm) {
+        const filteredProducts = mobileProducts.filter(
+          (product) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        displayProducts(filteredProducts);
+      }
+
+      // Event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeTheme();
+        initializeLanguage();
+
+        // Display all products initially
+        displayProducts(mobileProducts);
+
+        // Theme toggle button
+        document
+          .getElementById("theme-toggle")
+          .addEventListener("click", toggleTheme);
+
+        // Language switcher functionality
+        document
+          .getElementById("language-btn")
+          .addEventListener("click", function () {
+            const dropdown = document.getElementById("language-dropdown");
+            dropdown.classList.toggle("hidden");
+          });
+
+        // Language option handlers
+        document.querySelectorAll(".language-option").forEach((option) => {
+          option.addEventListener("click", function () {
+            const lang = this.getAttribute("data-lang");
+            setLanguage(lang);
+            document
+              .getElementById("language-dropdown")
+              .classList.add("hidden");
+            // Re-display products with updated language
+            displayProducts(mobileProducts);
+          });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+          const langBtn = document.getElementById("language-btn");
+          const dropdown = document.getElementById("language-dropdown");
+
+          if (
+            !langBtn.contains(event.target) &&
+            !dropdown.contains(event.target)
+          ) {
+            dropdown.classList.add("hidden");
+          }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        mobileMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        // Search functionality
+        document
+          .getElementById("product-search")
+          .addEventListener("input", function (e) {
+            filterProducts(e.target.value);
+          });
+      });
+
+      // Theme change listener
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (event) => {
+          if (!localStorage.getItem("theme")) {
+            if (event.matches) {
+              document.documentElement.classList.add("dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+            }
+          }
+        });
+    </script>
+  </body>
+</html>
